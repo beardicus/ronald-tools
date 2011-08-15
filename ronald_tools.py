@@ -67,13 +67,53 @@ def length_of_seeks(group):
     
     return length
 
-def efficiency_report(group):
-    print length_of_paths(group)
-    print length_of_seeks(group)
+def efficiency_report(hpgl_file):
+    group = pupd_to_paths(io.import_hpgl_file(hpgl_file))
 
-def dumb_sort(group):
-    zoot = 'zoink'
-    #test.points.xy.reverse()
+    drawing = pu_to_in(length_of_paths(group))
+    seeking = pu_to_in(length_of_seeks(group))
+    sorting1 = pu_to_in(length_of_seeks(sort1(group)))
+
+    print hpgl_file
+    print "drawing: %d" % drawing
+    print "seeking: %d" % seeking
+    print "sort1:   %d" % sorting1 
+    print "\n"
+
+def sort1(group):
+    # dumb sort. find closest endpoint to current endpoint, append, rinse, repeat
+    sortedgroup = Group()
+    original = group[:]
+    
+    sortedgroup.append(original[0])
+    del original[0]
+    
+    while original:
+        p1 = sortedgroup[-1].points.xy[-1]
+        bestvalue = 99999999999999999999 # i know this is stupid. ugh.
+        bestindex = 0
+        reverseflag = False
+        
+        for index in range(len(original)):
+            distance = distance_between_coordinates(p1, original[index].points.xy[0])
+            if distance < bestvalue:
+                bestvalue = distance
+                bestindex = index
+                reverseflag = False
+                
+            distance = distance_between_coordinates(p1, original[index].points.xy[-1])
+            if distance < bestvalue:
+                bestvalue = distance
+                bestindex = index
+                reverseflag = True
+        
+        if reverseflag:
+            original[bestindex].points.xy.reverse()
+                    
+        sortedgroup.append(original[bestindex])
+        del original[bestindex]
+
+    return sortedgroup
 
 if __name__ == '__main__':
     from chiplotle import *
@@ -82,5 +122,5 @@ if __name__ == '__main__':
     hpgl_files = glob.glob('./hpgl/*.hpgl')
     
     for hpgl_file in hpgl_files:
-        efficiency_report(pupd_to_paths(io.import_hpgl_file(hpgl_file)))
+        efficiency_report(hpgl_file)
 
