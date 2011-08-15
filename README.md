@@ -7,24 +7,24 @@ Currently, I'm focused on optimizing the drawing path to minimize seek times.
 I'm learning python as I go, so do be gentle, but feel free to tell me all
 about how stupid I am.
 
-## pupd_to_paths(hpgl) 
+## pupd\_to\_paths(hpgl) 
 
 Slurp in PUs and PDs, and converts them to a chiplotle group of simple paths. This
 is probably very fragile, but its works on the simple output of pstoedit -f hpgl.
         
-## distance_between_coordinates(p1, p2)
+## distance\_between\_coordinates(p1, p2)
 
 Doi. Pass it two coordinate objects, recieve the distance between them in plotter units.
 
-## length_of_path(path)
+## length\_of\_path(path)
 
 Takes a path object, returns its ful length in plotter units.
 
-## length_of_paths(group)
+## length\_of\_paths(group)
 
 Takes a chiplotle group of paths, returns the total length the pen was down.
  
-## length_of_seeks(group)
+## length\_of\_seeks(group)
 
 Takes a chiplotle group of paths, return the total length of seeks between paths.
 
