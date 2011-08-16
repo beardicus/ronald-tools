@@ -65,18 +65,8 @@ def length_of_seeks(group):
     
     return length
 
-def efficiency_report(hpgl_file):
-    group = pupd_to_paths(io.import_hpgl_file(hpgl_file))
 
-    drawing = pu_to_in(length_of_paths(group))
-    seeking = pu_to_in(length_of_seeks(group))
-    sorting1 = pu_to_in(length_of_seeks(sort1(group)))
-
-    print hpgl_file
-    print "drawing: %d" % drawing
-    print "seeking: %d" % seeking
-    print "sort1:   %d" % sorting1 
-    print "\n"
+#    print str(hpgl_file).ljust(30), repr(drawing).rjust(20), repr(seeking).rjust(20), repr(sorting1).rjust(20)
 
 def sort1(group):
     # dumb sort. find closest endpoint to current endpoint, append, rinse, repeat
@@ -120,5 +110,12 @@ if __name__ == '__main__':
     hpgl_files = glob.glob('./hpgl/*.hpgl')
     
     for hpgl_file in hpgl_files:
-        efficiency_report(hpgl_file)
+        group = pupd_to_paths(io.import_hpgl_file(hpgl_file))
+
+        drawing = pu_to_in(length_of_paths(group))
+        seeking = pu_to_in(length_of_seeks(group))
+        sorting1 = pu_to_in(length_of_seeks(sort1(group)))
+        
+        tabulate = '{:<30} {:>10.1f} {:>10.1f} {:>10.1f} ({:>5.1%})'
+        print tabulate.format(hpgl_file, drawing, seeking, sorting1, sorting1 / seeking)
 
