@@ -8,7 +8,7 @@ from math import sqrt
 
 def pupd_to_paths(hpgl):
     # slurp in PUs and PDs, and convert to a group of simple paths
-    # probably fragile, but works on the output of pstoedit -f hpgl
+    # probably fragile, but works fine on the output of pstoedit -f hpgl
     results = Group()
     builder = []
     
@@ -25,7 +25,7 @@ def pupd_to_paths(hpgl):
             
     return results
         
-def distance_between_coordinates(p1, p2):
+def distance_between(p1, p2):
     # take two coordinate objects, return the distance
     # between them in plotter units
     a = abs(p1.x - p2.x)
@@ -36,12 +36,12 @@ def distance_between_coordinates(p1, p2):
 def length_of_path(path):
     # take a path object, return its length in plotter units
     length = 0
-    coords = path.points.xy[:]
+    coords = path.points.xy[:] 
     
     p1 = coords.pop()
     while coords:
        p2 = coords.pop()
-       length += distance_between_coordinates(p1, p2)
+       length += distance_between(p1, p2)
        p1 = p2
     
     return length
@@ -62,7 +62,7 @@ def length_of_seeks(group):
     
     count = 1
     while count < len(group):
-        length += distance_between_coordinates(group[count - 1].points.xy[-1],group[count].points.xy[0])
+        length += distance_between(group[count - 1].points.xy[-1],group[count].points.xy[0])
         count += 1
     
     return length
@@ -95,13 +95,13 @@ def sort1(group):
         reverseflag = False
         
         for index in range(len(original)):
-            distance = distance_between_coordinates(p1, original[index].points.xy[0])
+            distance = distance_between(p1, original[index].points.xy[0])
             if distance < bestvalue:
                 bestvalue = distance
                 bestindex = index
                 reverseflag = False
                 
-            distance = distance_between_coordinates(p1, original[index].points.xy[-1])
+            distance = distance_between(p1, original[index].points.xy[-1])
             if distance < bestvalue:
                 bestvalue = distance
                 bestindex = index
