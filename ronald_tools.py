@@ -59,11 +59,9 @@ def length_of_seeks(group):
     # take an ordered group of paths, return the total
     # length of seeks between paths
     length = 0
-    
-    count = 1
-    while count < len(group):
-        length += distance_between(group[count - 1].points.xy[-1],group[count].points.xy[0])
-        count += 1
+
+    for index in range(len(group) - 1):
+        length += distance_between(group[index].points.xy[-1],group[index + 1].points.xy[0])
     
     return length
 
@@ -109,7 +107,7 @@ def sort1(group):
         
         if reverseflag:
             original[bestindex].points.xy.reverse()
-                    
+
         sortedgroup.append(original[bestindex])
         del original[bestindex]
 
